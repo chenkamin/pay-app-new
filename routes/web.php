@@ -16,10 +16,13 @@ Route::resource('payments', Controller::class);
 |
 */
 
-Route::post('/payment', 'App\Http\Controllers\Controller@createPayment');
+Route::post('/payment', [App\Http\Controllers\Controller::class , "createPayment"]);
 Route::get('/payments', 'App\Http\Controllers\Controller@getPayments');
 Route::put('/payment/{id}', 'App\Http\Controllers\Controller@updatePayment');
 Route::delete('/payment/{id}', 'App\Http\Controllers\Controller@removePayment');
+Route::get('/form', function () {
+    return view('form');
+});
 
 
 // how to handle cors in laravel app?

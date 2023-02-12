@@ -13,19 +13,14 @@ use App\Services\Payments;
 class Controller extends BaseController{
 
     // use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    public function createPayment(Request $request  ){
+    public function createPayment(Request $request, Payments $paymentsService ){
         if($request->input('sale_price') == null || $request->input('currency') == null || $request->input('product_name') == null){
-            return response()->json([
-                "message" => "Please fill all the fields",
-                "statusCode" => 400]);
+            return response([  "message" => "Something went wrong"],400);
         }
         try {
-            $res =  Payments::createPayment($request);
+            $res =  $paymentsService->createPayment($request);
             if(!is_null($res)){
-                return response()->json(
-                    ['message'=>'new payment created',
-                        'statusCode'=>201
-                    ] );
+                return response([  "message" => "new payment created","res" =>$res],201);
             }
         } catch (\Throwable $th) {
             return response()->json([
@@ -35,9 +30,9 @@ class Controller extends BaseController{
         }
     }
 
-    public function getPayments(){
+    public function getPayments(Payments $paymentsService ){
         try {
-            $res = Payments::getPayments();
+            $res = $paymentsService->getPayments();
             return response()->json($res, 200);
         } catch (\Throwable $th) {
             return response()->json([
@@ -48,10 +43,14 @@ class Controller extends BaseController{
 
     }
 
-    public function updatePayment($id, Request $request){
+    public function updatePayment($id, Request $request,Payments $paymentsService){
         try {
-            $res  = Payments::updatePayment($id,$request);
-            return response()->json($res  , 200);
+            $res  = $paymentsService->updatePayment($id,$request);
+            if(!$res){
+                return response( ['error' => 'payment not found'] ,404);
+
+            }
+            return response($res );
         } catch (\Throwable $th) {
             return response()->json([
                 "message" => "Something went wrong",
@@ -60,21 +59,22 @@ class Controller extends BaseController{
         }
     }
 
-    public function removePayment($id){
+    public function removePayment($id,Payments $paymentsService){
         try{
-            $res = Payments::removePayment($id);
-            if($res){
-                return response()->json(null, 204);
-            }else{
-                return response()->json([
-                    "message" => "Something went wrong",
-                    "statusCode" => 500]);
+            $res = $paymentsService->removePayment($id);
+            if(!$res){
+                return response( ['error' => 'payment not found'] ,404);
             }
+                return response(null, 204);
         }catch (\Throwable $th) {
             return response()->json([
                 "message" => "Something went wrong",
                 "error" => $th,
                 "statusCode" => 500]);
         }
+    }
+
+    public function form($id){
+       return view('form');
     }
 }

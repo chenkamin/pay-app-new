@@ -6,7 +6,7 @@ use App\Models\Payment;
 
 class Payments {
 
-    public static function createPayment($request){
+    public  function createPayment($request){
         try {
             $creationData = [
                 "seller_payme_id"=>"MPL14985-68544Z1G-SPV5WK2K-0WJWHC7N",
@@ -24,7 +24,7 @@ class Payments {
         }
     }
 
-    static public function httpPayment($payment){
+     public function httpPayment($payment){
         try {
             return Http::post('https://sandbox.payme.io/api/generate-sale' , $payment );
         } catch (\Throwable $th) {
@@ -32,7 +32,7 @@ class Payments {
         }
     }
 
-    static public function insert($request,$httpRes){
+     public function insert($request,$httpRes){
         try {
             $payment = Payment::create([
                 "description"=> $request->input('product_name'),
@@ -47,7 +47,7 @@ class Payments {
         }
     }
 
-    static public function getPayments(){
+     public function getPayments(){
         try {
             $payments = Payment::all();
             return $payments ;
@@ -56,11 +56,11 @@ class Payments {
         }
     }
 
-    static public function updatePayment($id,$request){
+     public function updatePayment($id,$request){
         try {
             $payment= Payment::find($id);
             if (!$payment) {
-                return response()->json(['error' => 'payment not found'], 404);
+                return false;
             }
             $payment->description = $request->description;
             $payment->amount = $request->amount;
@@ -72,11 +72,11 @@ class Payments {
         }
     }
 
-    static public function removePayment($id){
+     public function removePayment($id){
         try {
             $payment = Payment::find($id);
             if (!$payment) {
-                return response()->json(['error' => 'payment not found'], 404);
+                return false;
             }
             $payment->delete();
             return true;
