@@ -1,0 +1,112 @@
+{
+	"info": {
+		"_postman_id": "e520a1f0-9297-4532-871c-a7b76df55fed",
+		"name": "payme",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25715468"
+	},
+	"item": [
+		{
+			"name": "get payments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8888/payments",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add payment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"sale_price\":\"12670\",\r\n\"currency\":\"ILS\", \r\n\"product_name\": \"guitar\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.payme.io/api/generate-sale",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"payme",
+						"io"
+					],
+					"path": [
+						"api",
+						"generate-sale"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update payment",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\":\"drum\", \r\n    \"amount\": \"12670\",\r\n        \"currency\": \"ILS\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8888/payment/7",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"payment",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete payment",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8888/payment/7",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"payment",
+						"7"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
