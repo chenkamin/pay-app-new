@@ -17,9 +17,9 @@ Route::resource('payments', Controller::class);
 */
 
 Route::post('/payment', [App\Http\Controllers\Controller::class , "createPayment"]);
-Route::get('/payments', 'App\Http\Controllers\Controller@getPayments');
-Route::put('/payment/{id}', 'App\Http\Controllers\Controller@updatePayment');
-Route::delete('/payment/{id}', 'App\Http\Controllers\Controller@removePayment');
+Route::get('/payments', [App\Http\Controllers\Controller::class , "getPayments"]);
+Route::put('/payment/{id}', [App\Http\Controllers\Controller::class ,"updatePayment"]);
+Route::delete('/payment/{id}', [App\Http\Controllers\Controller::class , "removePayment"]);
 Route::get('/form', function () {
     return view('form');
 });

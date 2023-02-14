@@ -2,35 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Request;
-use App\Models\Payment;
 use App\Services\Payments;
-class Controller extends BaseController{
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
 
-    // use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    public function createPayment(Request $request, Payments $paymentsService ){
-        if($request->input('sale_price') == null || $request->input('currency') == null || $request->input('product_name') == null){
-            return response([  "message" => "Something went wrong"],400);
+class Controller extends BaseController
+{
+
+
+    public function createPayment(Request $request, Payments $paymentsService)
+    {
+        if ($request->input('sale_price') == null || $request->input('currency') == null || $request->input('product_name') == null) {
+            return response(["message" => "Something went wrong"], 400);
         }
         try {
-            $res =  $paymentsService->createPayment($request);
-            if(!is_null($res)){
-                return response([  "message" => "new payment created","res" =>$res],201);
+            $res = $paymentsService->createPayment($request);
+            if (!is_null($res)) {
+                return response(["message" => "new payment created", "res" => $res], 201);
             }
-        } catch (\Throwable $th) {
-            return response()->json([
+        } catch (\Exception $th) {
+            return response([
                 "message" => "Something went wrong",
-                "error" => $th,
-                "statusCode" => 500]);
+                "error" => $th->getMessage(),
+            ], 500);
         }
     }
 
-    public function getPayments(Payments $paymentsService ){
+    /**
+     * @param Payments $paymentsService
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPayments(Payments $paymentsService): \Illuminate\Http\JsonResponse
+    {
         try {
             $res = $paymentsService->getPayments();
             return response()->json($res, 200);
@@ -43,38 +46,55 @@ class Controller extends BaseController{
 
     }
 
-    public function updatePayment($id, Request $request,Payments $paymentsService){
+    /**
+     * @param $id
+     * @param Request $request
+     * @param Payments $paymentsService
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function updatePayment($id, Request $request, Payments $paymentsService) : \Illuminate\Http\Response
+    {
         try {
-            $res  = $paymentsService->updatePayment($id,$request);
-            if(!$res){
-                return response( ['error' => 'payment not found'] ,404);
-
+            $res = $paymentsService->updatePayment($id, $request);
+            if (!$res) {
+                return response(['error' => 'payment not found'], 404);
             }
-            return response($res );
+            return response($res);
         } catch (\Throwable $th) {
-            return response()->json([
+            return response([
                 "message" => "Something went wrong",
                 "error" => $th,
                 "statusCode" => 500]);
         }
     }
 
-    public function removePayment($id,Payments $paymentsService){
-        try{
+    /**
+     * @param $id
+     * @param Payments $paymentsService
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function removePayment($id, Payments $paymentsService) : \Illuminate\Http\Response
+    {
+        try {
             $res = $paymentsService->removePayment($id);
-            if(!$res){
-                return response( ['error' => 'payment not found'] ,404);
+            if (!$res) {
+                return response(['error' => 'payment not found'], 404);
             }
-                return response(null, 204);
-        }catch (\Throwable $th) {
-            return response()->json([
+            return response(null, 204);
+        } catch (\Throwable $th) {
+            return response([
                 "message" => "Something went wrong",
                 "error" => $th,
                 "statusCode" => 500]);
         }
     }
 
-    public function form($id){
-       return view('form');
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function form($id) : \Illuminate\Contracts\View\View
+    {
+        return view('form');
     }
 }

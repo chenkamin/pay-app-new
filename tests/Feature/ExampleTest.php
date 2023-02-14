@@ -27,7 +27,7 @@ class ExampleTest extends TestCase
 //            "language"=> "en"
 //        ];
 //    }
-    public function testCreatePaymentPayLoadSuccess()
+    public function testCreatePaymentSuccess()
     {
         $body = [
             "seller_payme_id" => "MPL14985-68544Z1G-SPV5WK2K-0WJWHC7N",
@@ -43,7 +43,7 @@ class ExampleTest extends TestCase
             ->assertJson(["message" => 'new payment created',]);
     }
 
-    public function testCreatePaymentPayLoadFail(){
+    public function testCreatePaymentFail(){
         $body = [
             "language" => "en"
         ];
